@@ -43,10 +43,9 @@ class Boggle_Find
     for i in 0..self.board.length - 1
       row = self.board[i]
       for j in 0..row.length - 1
-        puts "\n\nfind_word: #{i},#{j}"
         char = row[j]
         regexp = Regexp.new("^#{char.char}\\w+$")
-        self.set_possible_words(self.english_words, regexp)
+        self.set_possible_words(regexp, self.english_words)
         char.used = true
         self.next_char({row: i, col: j}, char.char)
         self.reset_used
@@ -60,7 +59,6 @@ class Boggle_Find
   def self.next_char origin, sub_str
     for i in -1..1
       for j in -1..1
-        puts "next_char: #{sub_str}: #{i},#{j}"
         row = origin[:row] + i
         col = origin[:col] + j
         # Check if the next char is an actual index
@@ -81,7 +79,7 @@ class Boggle_Find
 
         # make regex to widdle down possible words
         regexp = Regexp.new("^#{new_sub_str}\\w+$")
-        is_possible_word = self.set_possible_words(self.possible_words, regexp)
+        is_possible_word = self.set_possible_words(regexp, self.possible_words)
         # is_possible_word is equivalent to self.possible_words
 
         # Check if new_sub_str is an actual word
@@ -94,7 +92,9 @@ class Boggle_Find
         end
       end
     end
-
+    self.reset_used(sub_str[-1])
+    sub_str = sub_str[0..-2]
+    self.set_possible_words(Regexp.new("^#{sub_str}\\w+$"), self.english_words)
   end
 
   # helper methods
@@ -102,15 +102,21 @@ class Boggle_Find
     self.solution << word
   end
 
-  def self.reset_used
+  def self.reset_used reset_char=false
     self.board.each do |row|
       row.each do |char|
-        char.used = false
+        if reset_char
+          if char.char == reset_char
+            return char.used = false
+          end
+        else
+          char.used = false
+        end
       end
     end
   end
 
-  def self.set_possible_words wordbank, regexp
+  def self.set_possible_words regexp, wordbank
     # Shortens list of possible words
     # binding.pry
     reg_ex_list = wordbank.scan(regexp)
