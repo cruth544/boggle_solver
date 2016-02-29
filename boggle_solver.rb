@@ -55,8 +55,14 @@ class Boggle_Find
   end
 
   private
-  # go to next char and check if is a word
+  # Go to next char and check if is a word
   def self.next_char origin, sub_str
+    # Check for unique one letter words
+    if sub_str.length == 1
+      if ['a', 'i'].include?(sub_str)
+        self.solution << sub_str
+      end
+    end
     for i in -1..1
       for j in -1..1
         row = origin[:row] + i
