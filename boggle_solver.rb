@@ -116,14 +116,15 @@ class Boggle_Find
     # If no argument, resets all used booleans to false
     # Else only resets char in argument
     self.board.each do |row|
-      row.each do |char|
-        if reset_char
-          if char == reset_char
-            return char.used = false
-          end
-        else
-          char.used = false
+      if reset_char
+        reset = row.index(reset_char)
+        if reset
+          return row[reset].used = false
         end
+        next
+      end
+      row.each do |char|
+        char.used = false
       end
     end
   end
