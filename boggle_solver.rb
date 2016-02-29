@@ -82,7 +82,7 @@ class Boggle_Find
         # make regex to widdle down possible words
         regexp = Regexp.new("^#{new_sub_str}\\w+$")
         is_possible_word = self.set_possible_words(self.possible_words, regexp)
-        # is_possible_word is eqivolent to self.possible_words
+        # is_possible_word is equivalent to self.possible_words
 
         # Check if new_sub_str is an actual word
         # binding.pry
