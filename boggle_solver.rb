@@ -43,40 +43,44 @@ class Boggle_Find
     for i in 0..self.board.length - 1
       row = self.board[i]
       for j in 0..row.length - 1
+        puts "\n\nfind_word: #{i},#{j}"
         char = row[j]
-        regexp = Regexp.new("#{char.char}\\w+$")
+        regexp = Regexp.new("^#{char.char}\\w+$")
         self.set_possible_words(self.english_words, regexp)
+        char.used = true
         self.next_char({row: i, col: j}, char.char)
+        self.reset_used
       end
     end
     self.solution
   end
 
   private
-  # just add the word to our solution array
-
   # go to next char and check if is a word
   def self.next_char origin, sub_str
     for i in -1..1
       for j in -1..1
-        # Check if character has already been used
-        next if self.board[i][j].used
+        puts "next_char: #{sub_str}: #{i},#{j}"
+        row = origin[:row] + i
+        col = origin[:col] + j
         # Check if the next char is an actual index
-        next if i == 0 and j == 0
-        next if origin[:row] + i < 0 or origin[:row] + i >= self.board.length
-        next if origin[:col] + j < 0 or origin[:col] + j >= self.board.length
+        # next if i == 0 and j == 0
+        next if row < 0 or row >= self.board.length
+        next if col < 0 or col >= self.board.length
+        # Check if character has already been used
+        next if self.board[row][col].used
 
         # New sub_str to test
-        new_sub_str = sub_str << self.board[i][j].char
-        # Immediately check to see if it is a full words
-        if self.possible_words.match(Regexp.new("#{new_sub_str}$"))
+        new_sub_str = "#{sub_str}#{self.board[row][col].char}"
+        # Immediately check to see if it is a full word
+        if self.possible_words.match(Regexp.new("^#{new_sub_str}$"))
           unless self.solution.include?(new_sub_str)
             self.solution << new_sub_str
           end
         end
 
         # make regex to widdle down possible words
-        regexp = Regexp.new("#{new_sub_str}\\w+$")
+        regexp = Regexp.new("^#{new_sub_str}\\w+$")
         is_possible_word = self.set_possible_words(self.possible_words, regexp)
         # is_possible_word is eqivolent to self.possible_words
 
@@ -84,9 +88,9 @@ class Boggle_Find
         # binding.pry
         if is_possible_word
           # Set boolean on char that has been used
-          self.board[i][j].used = true
+          self.board[row][col].used = true
           # Continue to check if there is another possible word
-          self.next_char({row: i, col: j}, new_sub_str)
+          self.next_char({row: row, col: col}, new_sub_str)
         end
       end
     end
@@ -96,6 +100,14 @@ class Boggle_Find
   # helper methods
   def self.add_word word
     self.solution << word
+  end
+
+  def self.reset_used
+    self.board.each do |row|
+      row.each do |char|
+        char.used = false
+      end
+    end
   end
 
   def self.set_possible_words wordbank, regexp
@@ -119,5 +131,6 @@ boggle = [
   ["Y", "E", "U", "T"],
   ["E", "O", "R", "N"],
 ]
-board = Boggle_Board.convert(boggle)
+puts Boggle_Find.find_word(boggle)
+# board = Boggle_Board.convert(boggle)
 # puts board
