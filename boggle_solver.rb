@@ -47,16 +47,16 @@ class Boggle_Find
         regexp = Regexp.new("^#{char.char}\\w+$")
         self.set_possible_words(regexp, self.english_words)
         char.used = true
-        self.next_char({row: i, col: j}, char.char)
+        self.next_char({row: i, col: j}, char.char, char)
         self.reset_used
       end
     end
-    self.solution.length
+    self.solution
   end
 
   private
   # Go to next char and check if is a word
-  def self.next_char origin, sub_str
+  def self.next_char origin, sub_str, last_letter
     # Check for unique one letter words
     if sub_str.length == 1
       if ['a', 'i'].include?(sub_str)
@@ -91,12 +91,12 @@ class Boggle_Find
           # Set boolean on char that has been used
           self.board[row][col].used = true
           # Continue to check if there is another possible word
-          self.next_char({row: row, col: col}, new_sub_str)
+          self.next_char({row: row, col: col}, new_sub_str, self.board[row][col])
         end
       end
     end
     # Change last letter used state back to false
-    self.reset_used(sub_str[-1])
+    self.reset_used(last_letter)
 
     # Reset the list of possible words
     sub_str = sub_str[0..-2]
@@ -113,10 +113,12 @@ class Boggle_Find
   end
 
   def self.reset_used reset_char=false
+    # If no argument, resets all used booleans to false
+    # Else only resets char in argument
     self.board.each do |row|
       row.each do |char|
         if reset_char
-          if char.char == reset_char
+          if char == reset_char
             return char.used = false
           end
         else
@@ -142,11 +144,11 @@ class Boggle_Find
 end
 
 boggle = [
-  ["A", "G", "H", "I"],
+  ["D", "G", "H", "I"],
   ["K", "L", "P", "S"],
   ["Y", "E", "U", "T"],
   ["E", "O", "R", "N"],
 ]
-puts Boggle_Find.find_word(boggle)
+puts Boggle_Find.find_word(boggle).length
 # board = Boggle_Board.convert(boggle)
 # puts board
