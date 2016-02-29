@@ -51,7 +51,7 @@ class Boggle_Find
         self.reset_used
       end
     end
-    self.solution
+    self.solution.length
   end
 
   private
@@ -61,21 +61,18 @@ class Boggle_Find
       for j in -1..1
         row = origin[:row] + i
         col = origin[:col] + j
+
         # Check if the next char is an actual index
-        # next if i == 0 and j == 0
         next if row < 0 or row >= self.board.length
         next if col < 0 or col >= self.board.length
+
         # Check if character has already been used
         next if self.board[row][col].used
 
         # New sub_str to test
         new_sub_str = "#{sub_str}#{self.board[row][col].char}"
         # Immediately check to see if it is a full word
-        if self.possible_words.match(Regexp.new("^#{new_sub_str}$"))
-          unless self.solution.include?(new_sub_str)
-            self.solution << new_sub_str
-          end
-        end
+        self.check_word(new_sub_str, self.possible_words)
 
         # make regex to widdle down possible words
         regexp = Regexp.new("^#{new_sub_str}\\w+$")
@@ -92,14 +89,21 @@ class Boggle_Find
         end
       end
     end
+    # Change last letter used state back to false
     self.reset_used(sub_str[-1])
+
+    # Reset the list of possible words
     sub_str = sub_str[0..-2]
     self.set_possible_words(Regexp.new("^#{sub_str}\\w+$"), self.english_words)
   end
 
   # helper methods
-  def self.add_word word
-    self.solution << word
+  def self.check_word word, wordbank
+    if wordbank.match(Regexp.new("^#{word}$"))
+      unless self.solution.include?(word)
+        self.solution << word
+      end
+    end
   end
 
   def self.reset_used reset_char=false
