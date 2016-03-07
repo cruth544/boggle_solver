@@ -10,8 +10,8 @@ class Boggle_Find
 
   def self.find_word board_as_string
     self.board = Boggle_Board.convert(board_as_string)
-    Dir.chdir(File.dirname(__FILE__))
-    self.english_words = File.read("wordsEn.txt").gsub(/\r/, "")
+    Dir.chdir(File.dirname("../"))
+    self.english_words = File.read("boggle_solver/wordsEn.txt").gsub(/\r/, "")
     self.solution = []
     for i in 0..self.board.length - 1
       row = self.board[i]

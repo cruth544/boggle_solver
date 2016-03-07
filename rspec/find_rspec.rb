@@ -1,9 +1,9 @@
-require "../rspec/boggle_rspec"
+require "./rspec/boggle_rspec"
 
 describe Boggle_Find do
   before :each do
     board = [
-      ["H", "O", "R", "C"],
+      ["H", "A", "R", "C"],
       ["U", "Y", "H", "T"],
       ["D", "A", "F", "A"],
       ["D", "E", "L", "N"],
@@ -18,6 +18,10 @@ describe Boggle_Find do
   end
 
   it 'returns an array of english words' do
+    puts @boggle.join(", ")
+  end
+
+  it 'words are english' do
     expect(@boggle).to include("day")
     expect(@boggle).to include("fat")
     expect(@boggle).to include("fan")
@@ -28,4 +32,5 @@ describe Boggle_Find do
     expect(@boggle).not_to include("cat")
     expect(@boggle).not_to include("hoy")
   end
+
 end
