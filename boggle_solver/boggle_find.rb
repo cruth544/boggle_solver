@@ -1,33 +1,4 @@
-require "pry"
-class Boggle_Char
-  attr_accessor :char
-  attr_accessor :used
-
-  def initialize char
-    self.char = char.downcase
-    self.used = false
-  end
-
-  def to_s
-    self.char
-  end
-
-end
-
-class Boggle_Board
-  def self.convert arr
-    boggle_array = []
-    arr.each do |row|
-      boggle_row = []
-      row.each do |char|
-        boggle_row << Boggle_Char.new(char)
-      end
-      boggle_array << boggle_row
-    end
-    boggle_array
-  end
-end
-
+require_relative "boggle_board"
 class Boggle_Find
   class << self
     attr_accessor :solution
@@ -143,7 +114,6 @@ class Boggle_Find
   end
 
 end
-
 boggle = [
   ["N", "N", "C", "C"],
   ["I", "H", "H", "A"],
@@ -151,5 +121,3 @@ boggle = [
   ["K", "J", "D", "S"],
 ]
 puts Boggle_Find.find_word(boggle)
-# board = Boggle_Board.convert(boggle)
-# puts board
