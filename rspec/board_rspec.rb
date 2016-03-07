@@ -1,4 +1,4 @@
-require "./boggle_rspec"
+require "../rspec/boggle_rspec"
 
 describe Boggle_Board do
   before :each do

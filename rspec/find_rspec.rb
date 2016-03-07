@@ -1,4 +1,4 @@
-require "./boggle_rspec"
+require "../rspec/boggle_rspec"
 
 describe Boggle_Find do
   before :each do
