@@ -1,4 +1,5 @@
 require_relative "boggle_board"
+
 class Boggle_Find
   class << self
     attr_accessor :solution
@@ -9,7 +10,7 @@ class Boggle_Find
 
   def self.find_word board_as_string
     self.board = Boggle_Board.convert(board_as_string)
-    self.english_words = File.read("wordsEn.txt").gsub(/\r/, "")
+    self.english_words = File.read("./wordsEn.txt").gsub(/\r/, "")
     self.solution = []
     for i in 0..self.board.length - 1
       row = self.board[i]
@@ -114,10 +115,11 @@ class Boggle_Find
   end
 
 end
-boggle = [
-  ["N", "N", "C", "C"],
-  ["I", "H", "H", "A"],
-  ["C", "O", "A", "T"],
-  ["K", "J", "D", "S"],
-]
-puts Boggle_Find.find_word(boggle)
+
+# board = [
+#   ["H", "O", "R", "C"],
+#   ["U", "Y", "H", "T"],
+#   ["D", "A", "F", "A"],
+#   ["D", "E", "L", "N"],
+# ]
+# puts Boggle_Find.find_word(board)
